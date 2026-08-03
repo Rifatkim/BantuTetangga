@@ -1,0 +1,22 @@
+Frontend
+- Next.js
+- TypeScript
+- Tailwind
+
+Backend
+- Supabase
+
+Database
+- PostgreSQL
+
+Realtime
+- Supabase Realtime
+
+Map
+- Mapbox
+
+Payment
+- Midtrans Sandbox
+
+Deployment
+- Vercel
