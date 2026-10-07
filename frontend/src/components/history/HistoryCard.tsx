@@ -1,5 +1,6 @@
+import React from "react";
 import { Job } from "@/types";
-import { cn } from "@/lib/utils";
+import { cn, formatWIBDate } from "@/lib/utils";
 import { CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { DashboardCard } from "../dashboard/DashboardCard";
@@ -9,9 +10,17 @@ interface HistoryCardProps {
   role: "consumer" | "partner";
 }
 
-export function HistoryCard({ job, role }: HistoryCardProps) {
+export const HistoryCard = React.memo(function HistoryCard({ job, role }: HistoryCardProps) {
   const isCompleted = job.status === "COMPLETED";
-  const partnerName = role === "consumer" ? job.partnerName : job.consumerName;
+  const partnerName = role === "consumer" 
+    ? (job.partnerName || (job as any).partner?.name) 
+    : (job.consumerName || (job as any).consumer?.name);
+    
+  const createdAt = job.createdAt || (job as any).created_at;
+  const actualReward = Number(job.rewardAmount ?? (job as any).reward_amount ?? 0);
+  const rewardType = job.rewardType || (job as any).reward_type;
+  
+  const formattedDate = formatWIBDate(createdAt);
   
   return (
     <Link href={`/dashboard/history/${job.id}`} className="block group">
@@ -27,8 +36,8 @@ export function HistoryCard({ job, role }: HistoryCardProps) {
               {isCompleted ? "Selesai" : "Dibatalkan"}
             </span>
           </div>
-          <span className="text-xs text-muted-foreground">
-            {new Date(job.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}
+          <span className="text-xs text-muted-foreground font-medium">
+            {formattedDate}
           </span>
         </div>
         
@@ -38,20 +47,19 @@ export function HistoryCard({ job, role }: HistoryCardProps) {
         
         <div className="flex justify-between items-end mt-4">
           <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 font-bold">
               {role === "consumer" ? "Mitra" : "Konsumen"}
             </p>
-            <p className="text-sm font-medium">{partnerName || "-"}</p>
+            <p className="text-sm font-semibold">{partnerName || "Menunggu"}</p>
           </div>
           
-          {job.rewardType === "FIXED" && (
+          {rewardType === "FIXED" && (
             <div className="text-right">
-              <p className="text-sm font-bold text-foreground">Rp {job.rewardAmount?.toLocaleString("id-ID")}</p>
+              <p className="text-sm font-extrabold text-foreground">Rp {actualReward.toLocaleString("id-ID")}</p>
             </div>
           )}
         </div>
       </DashboardCard>
     </Link>
   );
-}
-
+});

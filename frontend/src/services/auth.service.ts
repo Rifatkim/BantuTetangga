@@ -4,11 +4,33 @@ import { User } from "@/types";
 export const authService = {
   async login(data: Record<string, unknown>): Promise<{success: boolean; data: {user: User, token: string, role: "consumer" | "partner"}}> {
     const res = await axiosInstance.post("/auth/login", data);
+    if (res.data && res.data.success === false) {
+      throw new Error(res.data.detail || "Login gagal");
+    }
     return res.data;
   },
 
   async register(data: Record<string, unknown>): Promise<{success: boolean; message: string; data?: unknown}> {
     const res = await axiosInstance.post("/auth/register", data);
+    if (res.data && res.data.success === false) {
+      throw new Error(res.data.detail || "Registrasi gagal");
+    }
+    return res.data;
+  },
+
+  async forgotPassword(email: string): Promise<{ success: boolean; message: string }> {
+    const res = await axiosInstance.post("/auth/forgot-password", { email });
+    if (res.data && res.data.success === false) {
+      throw new Error(res.data.detail || "Gagal mengirim OTP");
+    }
+    return res.data;
+  },
+
+  async resetPassword(data: { email: string; otp: string; new_password: string }): Promise<{ success: boolean; message: string }> {
+    const res = await axiosInstance.post("/auth/reset-password", data);
+    if (res.data && res.data.success === false) {
+      throw new Error(res.data.detail || "Gagal mengatur ulang kata sandi");
+    }
     return res.data;
   },
 
@@ -18,3 +40,4 @@ export const authService = {
     return Promise.resolve();
   }
 };
+

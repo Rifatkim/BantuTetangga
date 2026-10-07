@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import { PageContainer } from "@/components/dashboard/PageContainer";
 import { SectionHeader } from "@/components/dashboard/SectionHeader";
@@ -43,7 +43,11 @@ export default function HistoryPage() {
         // Only COMPLETED or CANCELLED
         const historyJobs = fetched.filter(j => j.status === "COMPLETED" || j.status === "CANCELLED");
         // Sort descending
-        historyJobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        historyJobs.sort((a, b) => {
+          const dateA = new Date(a.createdAt || (a as any).created_at).getTime();
+          const dateB = new Date(b.createdAt || (b as any).created_at).getTime();
+          return dateB - dateA;
+        });
         
         setJobs(historyJobs);
       } catch {
@@ -55,12 +59,14 @@ export default function HistoryPage() {
     fetchHistory();
   }, [role, user]);
 
-  const filteredJobs = jobs.filter(job => {
-    if (filter === "completed" && job.status !== "COMPLETED") return false;
-    if (filter === "cancelled" && job.status !== "CANCELLED") return false;
-    if (search && !job.title.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  });
+  const filteredJobs = React.useMemo(() => {
+    return jobs.filter(job => {
+      if (filter === "completed" && job.status !== "COMPLETED") return false;
+      if (filter === "cancelled" && job.status !== "CANCELLED") return false;
+      if (search && !job.title.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    });
+  }, [jobs, filter, search]);
 
   return (
     <DashboardLayout>

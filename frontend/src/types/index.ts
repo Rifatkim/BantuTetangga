@@ -4,8 +4,13 @@ export interface User {
   email: string;
   phone?: string;
   address?: string;
+  avatar_url?: string;
+  avatarUrl?: string;
+  gender?: "MALE" | "FEMALE" | "PRIA" | "WANITA" | string;
   role: "consumer" | "partner";
 }
+
+
 
 export interface AuthState {
   user: User | null;
@@ -23,7 +28,10 @@ export type JobStatus =
   | "WORKING"
   | "WAITING_CONFIRMATION" 
   | "COMPLETED" 
-  | "CANCELLED";
+  | "CANCELLED"
+  | "ARRIVED"
+  | "IN_PROGRESS"
+  | "WAITING_PAYMENT";
 
 export interface JobProgress {
   id: string;
@@ -38,8 +46,12 @@ export interface Job {
   id: string;
   consumerId: string;
   consumerName: string;
+  consumerPhone?: string;
+  consumer?: { name: string; phone?: string; };
   partnerId?: string;
   partnerName?: string;
+  partnerPhone?: string;
+  partner?: { name: string; phone?: string; };
   title: string;
   description: string;
   address: string;
@@ -50,8 +62,11 @@ export interface Job {
   category?: string;
   lat?: number;
   lng?: number;
+  photoUrl?: string;
+  photo_url?: string;
   distance?: number;
 }
+
 
 export type PaymentMethod = "VA" | "QRIS" | "TRANSFER" | "CASH";
 export type PaymentStatus = "UNPAID" | "PENDING" | "SUCCESS" | "FAILED" | "REFUNDED";

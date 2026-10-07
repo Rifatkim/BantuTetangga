@@ -16,7 +16,7 @@ export default function SettingsPage() {
     <DashboardLayout>
       <PageContainer>
         <SectionHeader title="Pengaturan" description="Atur preferensi dan akun aplikasi Anda." />
-        
+
         <div className="grid gap-6 mt-6 max-w-2xl">
           <Card>
             <CardHeader>
@@ -34,6 +34,10 @@ export default function SettingsPage() {
                 <p className="text-lg font-semibold">{user?.name || "Belum diatur"}</p>
               </div>
               <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">Nomor Telepon</p>
+                <p className="text-base font-mono font-semibold text-primary">{user?.phone || "Belum didaftarkan"}</p>
+              </div>
+              <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">Email</p>
                 <p className="text-base">{user?.email || "Belum diatur"}</p>
               </div>
@@ -43,8 +47,18 @@ export default function SettingsPage() {
                   {role === 'consumer' ? 'Konsumen' : role === 'partner' ? 'Mitra' : 'Belum memilih'}
                 </p>
               </div>
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => window.location.href = "/profile"}
+                >
+                  Ubah Data Profil & Nomor Telepon
+                </Button>
+              </div>
             </CardContent>
           </Card>
+
 
           <Card className="border-destructive/20 shadow-sm">
             <CardHeader>
@@ -54,8 +68,8 @@ export default function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 className="w-full sm:w-auto flex items-center gap-2"
                 onClick={logout}
               >
@@ -64,6 +78,10 @@ export default function SettingsPage() {
               </Button>
             </CardContent>
           </Card>
+
+          <p className="text-center text-xs text-muted-foreground pt-2 font-medium">
+            KerjaIn Platform • v3.170826.22.40
+          </p>
         </div>
       </PageContainer>
     </DashboardLayout>

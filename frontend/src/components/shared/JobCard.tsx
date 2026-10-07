@@ -4,6 +4,8 @@ import { StatusBadge } from "./StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin, Tag } from "lucide-react";
 
+import { formatWIBDateTime } from "@/lib/utils";
+
 interface JobCardProps {
   job: Job;
   onAction?: (job: Job) => void;
@@ -11,18 +13,13 @@ interface JobCardProps {
 }
 
 export function JobCard({ job, onAction, actionLabel }: JobCardProps) {
-  const formattedReward =
-    job.rewardType === "FIXED" && job.rewardAmount
-      ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(job.rewardAmount)
-      : "Seikhlasnya";
+  const actualReward = job.rewardAmount ?? (job as any).reward_amount;
+  const formattedReward = actualReward
+    ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(actualReward)
+    : "Rp 0";
 
-  const scheduledDate = new Date(job.createdAt).toLocaleDateString("id-ID", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const scheduledDate = formatWIBDateTime(job.createdAt || (job as any).created_at);
+
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md border-border/60">

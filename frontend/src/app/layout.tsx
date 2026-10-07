@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ProtectedRoute } from "@/components/navigation/ProtectedRoute";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ClientBootstrap } from "@/components/providers/ClientBootstrap";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -14,9 +15,43 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://kerjain.id"),
   title: "Kerjain - Bantu Tetangga, Selesaikan Masalah",
-  description: "Friendly Local Service Marketplace",
+  description: "Friendly Local Service Marketplace - Platform Jasa & Bantuan Mikro Terpercaya",
+  icons: {
+    icon: [
+      { url: "/logo-notext.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    shortcut: ["/logo-notext.png"],
+    apple: [
+      { url: "/logo-notext.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  openGraph: {
+    title: "Kerjain - Bantu Tetangga, Selesaikan Masalah",
+    description: "Friendly Local Service Marketplace - Solusi Cepat & Terpercaya Jasa Lokal",
+    url: "https://kerjain.id",
+    siteName: "Kerjain",
+    images: [
+      {
+        url: "/logo-notext.png",
+        width: 512,
+        height: 512,
+        alt: "Kerjain Logo",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Kerjain - Bantu Tetangga, Selesaikan Masalah",
+    description: "Friendly Local Service Marketplace",
+    images: ["/logo-notext.png"],
+  },
 };
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,15 +61,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className={`${plusJakartaSans.className} min-h-screen flex flex-col antialiased text-foreground selection:bg-primary/20`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ClientBootstrap />
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <QueryProvider>
             <ProtectedRoute>
               {children}
             </ProtectedRoute>
-            <Toaster position="top-center" richColors />
+            <Toaster position="top-center" richColors duration={2500} closeButton />
           </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+
+
